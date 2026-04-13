@@ -1,9 +1,17 @@
 import { useState } from "react";
 
+// 🎨 Colores con nombre
 const coloresBase = [
-  "#000000", "#ffffff", "#ff0000", "#00ff00",
-  "#0000ff", "#ffff00", "#ff8800", "#8000ff",
-  "#00ffff", "#888888"
+  { hex: "#000000", nombre: "Negro" },
+  { hex: "#ffffff", nombre: "Blanco" },
+  { hex: "#ff0000", nombre: "Rojo" },
+  { hex: "#00ff00", nombre: "Verde" },
+  { hex: "#0000ff", nombre: "Azul" },
+  { hex: "#ffff00", nombre: "Amarillo" },
+  { hex: "#ff8800", nombre: "Naranja" },
+  { hex: "#8000ff", nombre: "Morado" },
+  { hex: "#00ffff", nombre: "Cian" },
+  { hex: "#888888", nombre: "Gris" },
 ];
 
 const tipos = ["PLA", "PETG", "TPU", "PVA"];
@@ -13,6 +21,7 @@ export default function AddModal({ open, setOpen, agregar }) {
   const [form, setForm] = useState({
     tipo: "",
     color: "",
+    nombreColor: "",
     spools: 0,
     gramos: 0,
     ubicacion: "",
@@ -28,6 +37,7 @@ export default function AddModal({ open, setOpen, agregar }) {
     agregar({
       tipo: form.especial ? form.nombreEspecial : form.tipo,
       color: form.color,
+      nombre_color: form.nombreColor,
       cantidad: total,
       ubicacion: form.ubicacion,
     });
@@ -39,10 +49,10 @@ export default function AddModal({ open, setOpen, agregar }) {
     <div className="fixed inset-0 bg-black/70 flex justify-center items-center">
       <div className="bg-zinc-800 text-white p-6 rounded-2xl w-80 flex flex-col gap-4">
 
-        <h2 className="font-bold">Nuevo Filamento</h2>
+        <h2 className="font-bold text-lg">Nuevo Filamento</h2>
 
-        {/* Checkbox especial */}
-        <label className="flex items-center gap-2">
+        {/* 🔥 Especial */}
+        <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
             onChange={(e) =>
@@ -52,8 +62,7 @@ export default function AddModal({ open, setOpen, agregar }) {
           Filamento especial
         </label>
 
-        {/* Si es especial */}
-        {form.especial && (
+        {form.especial ? (
           <input
             placeholder="Nombre especial"
             className="bg-zinc-700 p-2 rounded"
@@ -61,33 +70,73 @@ export default function AddModal({ open, setOpen, agregar }) {
               setForm({ ...form, nombreEspecial: e.target.value })
             }
           />
-        )}
-
-        {/* Si NO es especial */}
-        {!form.especial && (
+        ) : (
           <select
             className="bg-zinc-700 p-2 rounded"
             onChange={(e) =>
               setForm({ ...form, tipo: e.target.value })
             }
           >
-            <option>Tipo</option>
-            {tipos.map(t => <option key={t}>{t}</option>)}
+            <option value="">Tipo</option>
+            {tipos.map((t) => (
+              <option key={t}>{t}</option>
+            ))}
           </select>
         )}
 
-        {/* Color */}
-        <div className="flex gap-2 flex-wrap">
-          {coloresBase.map((c) => (
-            <div
-              key={c}
-              onClick={() => setForm({ ...form, color: c })}
-              className="w-8 h-8 rounded-full border cursor-pointer"
-              style={{ backgroundColor: c }}
+        {/* 🎨 COLOR */}
+        <div>
+          <p className="text-sm text-gray-300">Color</p>
+
+          <div className="flex gap-2 flex-wrap mt-2">
+            {coloresBase.map((c) => (
+              <div
+                key={c.hex}
+                onClick={() =>
+                  setForm({
+                    ...form,
+                    color: c.hex,
+                    nombreColor: c.nombre,
+                  })
+                }
+                title={c.nombre}
+                className={`w-8 h-8 rounded-full cursor-pointer border-2 transition ${
+                  form.color === c.hex
+                    ? "border-white scale-110"
+                    : "border-zinc-600"
+                }`}
+                style={{ backgroundColor: c.hex }}
+              />
+            ))}
+
+            {/* 🎯 Color personalizado */}
+            <input
+              type="color"
+              value={form.color || "#ffffff"}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  color: e.target.value,
+                  nombreColor: "Personalizado",
+                })
+              }
+              className="w-8 h-8 rounded border border-zinc-600 bg-transparent cursor-pointer"
             />
-          ))}
+          </div>
+
+          {/* 🏷 Nombre del color */}
+          <p className="text-xs mt-2 text-gray-400">
+            {form.nombreColor || "Selecciona un color"}
+          </p>
+
+          {/* 🌈 Preview */}
+          <div
+            className="w-full h-4 rounded mt-2"
+            style={{ backgroundColor: form.color }}
+          />
         </div>
 
+        {/* 📦 Spools */}
         <input
           type="number"
           placeholder="Spools"
@@ -97,30 +146,37 @@ export default function AddModal({ open, setOpen, agregar }) {
           }
         />
 
+        {/* ⚡ Gramos */}
         <input
           type="number"
-          placeholder="Gramos"
+          placeholder="Gramos extra"
           className="bg-zinc-700 p-2 rounded"
           onChange={(e) =>
             setForm({ ...form, gramos: Number(e.target.value) })
           }
         />
 
+        {/* 📍 Ubicación */}
         <select
           className="bg-zinc-700 p-2 rounded"
           onChange={(e) =>
             setForm({ ...form, ubicacion: e.target.value })
           }
         >
-          {ubicaciones.map(u => <option key={u}>{u}</option>)}
+          <option value="">Ubicación</option>
+          {ubicaciones.map((u) => (
+            <option key={u}>{u}</option>
+          ))}
         </select>
 
+        {/* 🚀 Guardar */}
         <button
           onClick={handleSubmit}
-          className="bg-white text-black py-2 rounded"
+          className="bg-white text-black py-2 rounded font-semibold active:scale-95"
         >
           Guardar
         </button>
+
       </div>
     </div>
   );
