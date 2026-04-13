@@ -1,9 +1,12 @@
 import { useState } from "react";
 
 export default function FilamentCard({ f, actualizar, eliminar }) {
+  if (!f) return null;
+
   const [edit, setEdit] = useState(false);
 
   const cantidad = f.cantidad || 0;
+  const color = f.color || "#888";
 
   const spools = Math.floor(cantidad / 1000);
   const restante = cantidad % 1000;
@@ -12,7 +15,7 @@ export default function FilamentCard({ f, actualizar, eliminar }) {
   const [form, setForm] = useState({
     spools,
     gramos: restante,
-    ubicacion: f.ubicacion,
+    ubicacion: f.ubicacion || "Bodega",
   });
 
   const guardar = () => {
@@ -28,17 +31,17 @@ export default function FilamentCard({ f, actualizar, eliminar }) {
 
       {/* Header */}
       <div className="flex justify-between">
-        <h2 className="font-semibold">{f.tipo}</h2>
-        <span className="text-xs text-gray-400">{f.ubicacion}</span>
+        <h2 className="font-semibold">{f.tipo || "Filamento"}</h2>
+        <span className="text-xs text-gray-400">{f.ubicacion || "Sin ubicación"}</span>
       </div>
 
       {/* Color */}
       <div className="flex items-center gap-2">
         <div
           className="w-4 h-4 rounded-full border"
-          style={{ backgroundColor: f.color }}
+          style={{ backgroundColor: color }}
         />
-        <span className="text-sm text-gray-300">{f.color}</span>
+        <span className="text-sm text-gray-300">{color}</span>
       </div>
 
       {/* Barra */}
@@ -47,8 +50,8 @@ export default function FilamentCard({ f, actualizar, eliminar }) {
           <div
             className="h-3 transition-all"
             style={{
-              width: `${porcentaje}%`,
-              backgroundColor: f.color
+              width: `${Math.min(porcentaje, 100)}%`,
+              backgroundColor: color
             }}
           />
         </div>

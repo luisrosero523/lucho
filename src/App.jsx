@@ -8,12 +8,21 @@ export default function App() {
   const [open, setOpen] = useState(false);
 
   const fetchData = async () => {
-    const { data, error } = await supabase
-      .from("filamentos")
-      .select("*")
-      .order("created_at", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("filamentos")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-    if (!error) setFilamentos(data || []);
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      setFilamentos(data || []);
+    } catch (err) {
+      console.error("Error fetch:", err);
+    }
   };
 
   useEffect(() => {
@@ -21,22 +30,34 @@ export default function App() {
   }, []);
 
   const agregar = async (nuevo) => {
-    await supabase.from("filamentos").insert([nuevo]);
-    fetchData();
+    try {
+      await supabase.from("filamentos").insert([nuevo]);
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const actualizar = async (id, cantidad, ubicacion) => {
-    await supabase
-      .from("filamentos")
-      .update({ cantidad, ubicacion })
-      .eq("id", id);
+    try {
+      await supabase
+        .from("filamentos")
+        .update({ cantidad, ubicacion })
+        .eq("id", id);
 
-    fetchData();
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const eliminar = async (id) => {
-    await supabase.from("filamentos").delete().eq("id", id);
-    fetchData();
+    try {
+      await supabase.from("filamentos").delete().eq("id", id);
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -56,7 +77,7 @@ export default function App() {
 
       {/* Grid */}
       <div className="p-4 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {filamentos.map((f) => (
+        {filamentos?.map((f) => (
           <FilamentCard
             key={f.id}
             f={f}
