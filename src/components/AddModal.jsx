@@ -39,14 +39,16 @@ export default function AddModal({ open, setOpen, agregar }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex justify-center items-center animate-fadeIn">
-      <div className="bg-white p-6 rounded-2xl w-80 flex flex-col gap-3">
+    <div className="fixed inset-0 bg-black/70 flex justify-center items-center animate-fadeIn">
 
-        <h2 className="font-bold">Nuevo Filamento</h2>
+      {/* Modal */}
+      <div className="bg-zinc-800 text-white p-6 rounded-2xl w-80 flex flex-col gap-4 shadow-xl">
+
+        <h2 className="font-bold text-lg">Nuevo Filamento</h2>
 
         {/* Tipo */}
         <select
-          className="border p-2 rounded"
+          className="bg-zinc-700 border border-zinc-600 p-2 rounded"
           onChange={(e) => setForm({ ...form, tipo: e.target.value })}
         >
           <option value="">Tipo</option>
@@ -55,21 +57,26 @@ export default function AddModal({ open, setOpen, agregar }) {
 
         {/* Color */}
         <div>
-          <p className="text-sm">Color</p>
+          <p className="text-sm text-gray-300">Color</p>
+
           <div className="flex gap-2 flex-wrap mt-2">
             {coloresBase.map((c) => (
               <div
                 key={c}
                 onClick={() => setForm({ ...form, color: c })}
-                className={`w-8 h-8 rounded-full cursor-pointer border-2 ${
-                  form.color === c ? "border-black scale-110" : "border-gray-300"
+                className={`w-8 h-8 rounded-full cursor-pointer border-2 transition ${
+                  form.color === c
+                    ? "border-white scale-110"
+                    : "border-zinc-600"
                 }`}
                 style={{ backgroundColor: c }}
               />
             ))}
+
+            {/* Color personalizado */}
             <input
               type="color"
-              className="w-8 h-8"
+              className="w-8 h-8 rounded cursor-pointer bg-transparent border border-zinc-600"
               onChange={(e) =>
                 setForm({ ...form, color: e.target.value })
               }
@@ -80,8 +87,8 @@ export default function AddModal({ open, setOpen, agregar }) {
         {/* Spools */}
         <input
           type="number"
-          placeholder="Spools"
-          className="border p-2 rounded"
+          placeholder="Spools (ej: 3)"
+          className="bg-zinc-700 border border-zinc-600 p-2 rounded"
           onChange={(e) =>
             setForm({ ...form, spools: Number(e.target.value) })
           }
@@ -90,8 +97,8 @@ export default function AddModal({ open, setOpen, agregar }) {
         {/* Gramos */}
         <input
           type="number"
-          placeholder="Gramos extra"
-          className="border p-2 rounded"
+          placeholder="Gramos extra (ej: 260)"
+          className="bg-zinc-700 border border-zinc-600 p-2 rounded"
           onChange={(e) =>
             setForm({ ...form, gramos: Number(e.target.value) })
           }
@@ -99,16 +106,19 @@ export default function AddModal({ open, setOpen, agregar }) {
 
         {/* Ubicación */}
         <select
-          className="border p-2 rounded"
-          onChange={(e) => setForm({ ...form, ubicacion: e.target.value })}
+          className="bg-zinc-700 border border-zinc-600 p-2 rounded"
+          onChange={(e) =>
+            setForm({ ...form, ubicacion: e.target.value })
+          }
         >
           <option value="">Ubicación</option>
           {ubicaciones.map(u => <option key={u}>{u}</option>)}
         </select>
 
+        {/* Botón */}
         <button
           onClick={handleSubmit}
-          className="bg-black text-white py-2 rounded active:scale-95"
+          className="bg-white text-black py-2 rounded font-semibold transition active:scale-95"
         >
           Guardar
         </button>
