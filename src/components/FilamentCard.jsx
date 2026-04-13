@@ -20,115 +20,107 @@ export default function FilamentCard({ f, actualizar, eliminar }) {
 
   const guardar = () => {
     const total = (form.spools * 1000) + form.gramos;
-
     actualizar(f.id, total, form.ubicacion);
     setEdit(false);
   };
 
   return (
-    <div className="bg-zinc-800 rounded-2xl shadow p-4 flex flex-col gap-3 
-      transition hover:scale-105">
+    <div
+      className="rounded-2xl p-4 flex flex-col gap-3 text-black shadow-lg transition hover:scale-105"
+      style={{ backgroundColor: color }}
+    >
+      {/* Overlay oscuro para legibilidad */}
+      <div className="bg-black/40 p-3 rounded-xl flex flex-col gap-3 text-white">
 
-      {/* Header */}
-      <div className="flex justify-between">
-        <h2 className="font-semibold">{f.tipo || "Filamento"}</h2>
-        <span className="text-xs text-gray-400">{f.ubicacion || "Sin ubicación"}</span>
-      </div>
-
-      {/* Color */}
-      <div className="flex items-center gap-2">
-        <div
-          className="w-4 h-4 rounded-full border"
-          style={{ backgroundColor: color }}
-        />
-        <span className="text-sm text-gray-300">{color}</span>
-      </div>
-
-      {/* Barra */}
-      <div className="relative">
-        <div className="w-full bg-zinc-700 h-3 rounded-full overflow-hidden">
-          <div
-            className="h-3 transition-all"
-            style={{
-              width: `${Math.min(porcentaje, 100)}%`,
-              backgroundColor: color
-            }}
-          />
+        {/* Header */}
+        <div className="flex justify-between">
+          <h2 className="font-semibold">{f.tipo || "Filamento"}</h2>
+          <span className="text-xs">{f.ubicacion}</span>
         </div>
 
-        <span className="absolute right-0 -top-5 text-xs font-bold">
-          {Math.round(porcentaje)}%
-        </span>
-      </div>
+        {/* Barra */}
+        <div className="relative">
+          <div className="w-full bg-white/30 h-3 rounded-full overflow-hidden">
+            <div
+              className="h-3 transition-all"
+              style={{
+                width: `${Math.min(porcentaje, 100)}%`,
+                backgroundColor: "#fff"
+              }}
+            />
+          </div>
 
-      {/* 🧵 Spools */}
-      <div className="flex items-center gap-2 text-xl font-bold">
-        <span>🧵</span>
-        <span>{spools}</span>
-      </div>
+          <span className="absolute right-0 -top-5 text-xs font-bold">
+            {Math.round(porcentaje)}%
+          </span>
+        </div>
 
-      {/* Info */}
-      <div className="text-sm text-gray-400">
-        + {restante}g
-      </div>
+        {/* Spools grande */}
+        <div className="flex items-center gap-2 text-2xl font-bold">
+          <span>🧵</span>
+          <span>{spools}</span>
+        </div>
 
-      {/* ✏️ Editar */}
-      {edit && (
-        <div className="flex flex-col gap-2">
-          <input
-            type="number"
-            className="bg-zinc-700 p-1 rounded"
-            value={form.spools}
-            onChange={(e) =>
-              setForm({ ...form, spools: Number(e.target.value) })
-            }
-          />
+        <div className="text-sm">+ {restante}g</div>
 
-          <input
-            type="number"
-            className="bg-zinc-700 p-1 rounded"
-            value={form.gramos}
-            onChange={(e) =>
-              setForm({ ...form, gramos: Number(e.target.value) })
-            }
-          />
+        {/* Edit */}
+        {edit && (
+          <div className="flex flex-col gap-2">
+            <input
+              type="number"
+              className="bg-black/50 p-1 rounded text-white"
+              value={form.spools}
+              onChange={(e) =>
+                setForm({ ...form, spools: Number(e.target.value) })
+              }
+            />
 
-          <select
-            className="bg-zinc-700 p-1 rounded"
-            value={form.ubicacion}
-            onChange={(e) =>
-              setForm({ ...form, ubicacion: e.target.value })
-            }
+            <input
+              type="number"
+              className="bg-black/50 p-1 rounded text-white"
+              value={form.gramos}
+              onChange={(e) =>
+                setForm({ ...form, gramos: Number(e.target.value) })
+              }
+            />
+
+            <select
+              className="bg-black/50 p-1 rounded text-white"
+              value={form.ubicacion}
+              onChange={(e) =>
+                setForm({ ...form, ubicacion: e.target.value })
+              }
+            >
+              <option>CFS Creadora</option>
+              <option>AMS Koala</option>
+              <option>Bodega</option>
+            </select>
+
+            <button
+              onClick={guardar}
+              className="bg-green-500 py-1 rounded"
+            >
+              Guardar
+            </button>
+          </div>
+        )}
+
+        {/* Acciones */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => setEdit(!edit)}
+            className="bg-white text-black px-2 py-1 rounded"
           >
-            <option>CFS Creadora</option>
-            <option>AMS Koala</option>
-            <option>Bodega</option>
-          </select>
+            Editar
+          </button>
 
           <button
-            onClick={guardar}
-            className="bg-green-500 py-1 rounded"
+            onClick={() => eliminar(f.id)}
+            className="bg-red-500 px-2 py-1 rounded text-white"
           >
-            Guardar
+            Eliminar
           </button>
         </div>
-      )}
-
-      {/* Acciones */}
-      <div className="flex gap-2">
-        <button
-          onClick={() => setEdit(!edit)}
-          className="bg-blue-500 px-2 py-1 rounded"
-        >
-          Editar
-        </button>
-
-        <button
-          onClick={() => eliminar(f.id)}
-          className="bg-red-500 px-2 py-1 rounded"
-        >
-          Eliminar
-        </button>
       </div>
     </div>
   );
